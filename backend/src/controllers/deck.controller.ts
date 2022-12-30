@@ -53,7 +53,7 @@ export const deleteDeck = async (req: Request, res: Response, next: NextFunction
         logger.debug(`Deck not found: ${req.body._id}}`);
         return next(new createError.NotFound(deckNotFoundErrorMessage));
       }
-      logger.debug(`Deck deleted: ${req.body._id}}`);
+      logger.debug(`Deck deleted: ${req.params._id}}`);
       return res.status(204).json({});
     })
     .catch((err) => {
