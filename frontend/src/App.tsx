@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getDecks } from "./api/getDecks";
+import { TDeck } from "./api/DeckInterface";
 import "./App.css";
-
-const API_URL = "http://localhost:3000";
-
-type TDeck = {
-  title: string;
-  _id: string;
-};
+import { createDeck } from "./api/createDeck";
+import { deleteDeck } from "./api/deleteDeck";
 
 function App() {
   const [title, setTitle] = useState<string>("");
@@ -17,43 +15,33 @@ function App() {
   }, []);
 
   async function handleGetDecks() {
-    fetch(`${API_URL}/decks`)
-      .then((response) => response.json())
-      .then((newDecks) => {
-        setDecks(newDecks);
+    getDecks()
+      .then((decks) => {
+        if (decks) setDecks(decks);
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      .catch((error) => console.log(error));
   }
 
   async function handleCreateDeck() {
-    const response = await fetch(`${API_URL}/decks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title }),
-    });
-    if (response.ok) {
-      const newDeck = await response.json();
-      setDecks([...decks, newDeck]);
-      setTitle("");
-    }
+    createDeck(title)
+      .then((deck) => {
+        if (deck) {
+          setDecks([...decks, deck]);
+          setTitle("");
+        }
+      })
+      .catch((error) => console.log(error));
   }
 
   async function handleDeleteDeck(id: string) {
-    const response = await fetch(`${API_URL}/decks/${id}`, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      const newDecks = decks.filter((deck) => deck._id !== id);
-      setDecks(newDecks);
-    } else {
-      // reload from backend
-      handleGetDecks();
-    }
+    deleteDeck(id)
+      .then(() => {
+        //console.log("deck deleted");
+        setDecks(decks.filter((deck) => deck._id !== id));
+      })
+      .catch(() => handleGetDecks());
   }
+
   return (
     <div className="App">
       <div>
@@ -62,7 +50,7 @@ function App() {
             {decks.map((deck) => (
               <li key={deck._id}>
                 <button onClick={() => handleDeleteDeck(deck._id)}>X</button>
-                {deck.title}
+                <Link to={`/decks/${deck._id}`}>{deck.title}</Link>
               </li>
             ))}
           </ul>
