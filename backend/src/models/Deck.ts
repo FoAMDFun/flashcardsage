@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 
+export interface Deck {
+  name: string;
+}
+
 const Schema = mongoose.Schema;
 
-const Deck = new Schema({
+const DeckSchema = new Schema<Deck>({
   name: String,
 });
 
-export default mongoose.model("Deck", Deck);
+export default mongoose.model("Deck", DeckSchema);

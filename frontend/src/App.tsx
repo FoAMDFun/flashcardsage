@@ -19,8 +19,9 @@ function App() {
             body: JSON.stringify({ title }),
           })
             .then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
+            .then((result) => {
+              console.log("Successfully created data: ", result);
+              setTitle("");
             })
             .catch((error) => {
               console.error("Error:", error);
@@ -37,6 +38,9 @@ function App() {
           id="deck-title"
           value={title}
         />
+        <button type="submit" disabled={title === ""}>
+          Create Deck
+        </button>
       </form>
     </div>
   );
