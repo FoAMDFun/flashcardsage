@@ -29,7 +29,7 @@ export const createDeck = async (req: Request, res: Response, next: NextFunction
   return deckService
     .createDeck(req.body)
     .then((deck) => {
-      logger.debug(`Decks post ${deck.id}`);
+      logger.debug(`Decks post result: ${deck}}`);
       return res.status(201).json(deck);
     })
     .catch((err) => {

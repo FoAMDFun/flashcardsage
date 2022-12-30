@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 export interface Deck {
-  name: string;
+  title: string;
 }
 
 const Schema = mongoose.Schema;
 
 const DeckSchema = new Schema<Deck>({
-  name: String,
+  title: String,
 });
 
 export default mongoose.model("Deck", DeckSchema);

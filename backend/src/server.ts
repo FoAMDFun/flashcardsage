@@ -1,7 +1,7 @@
 import { config as dotenvConfig } from "dotenv";
 dotenvConfig();
 
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import logger from "./config/logger";
