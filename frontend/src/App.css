@@ -27,6 +27,7 @@
 }
 
 .decks li {
+  position: relative;
   list-style-type: none;
   display: block;
   height: 6rem;
@@ -37,7 +38,9 @@
   align-items: center;
 }
 
-.decks li:hover {
-  background: #eee;
-  cursor: pointer;
+.decks li button {
+  position: absolute;
+  font-size: 14px;
+  top: 5px;
+  right: 5px;
 }
