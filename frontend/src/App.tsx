@@ -1,17 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
+
+const API_URL = "http://localhost:3000";
+
+type TDeck = {
+  title: string;
+  _id: string;
+};
 
 function App() {
   const [title, setTitle] = useState<string>("");
-
+  const [decks, setDecks] = useState<TDeck[]>([]);
+  useEffect(() => {
+    fetch(`${API_URL}/decks`)
+      .then((response) => response.json())
+      .then((newDecks) => {
+        setDecks(newDecks);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
   return (
     <div className="App">
+      <div className="decks">
+        <ul className="decks">
+          {decks.map((deck) => (
+            <li key={deck._id}>{deck.title}</li>
+          ))}
+        </ul>
+      </div>
       <form
         onSubmit={(source) => {
           source.preventDefault();
 
           // send back to the backend
-          fetch("http://localhost:3000/decks", {
+          fetch(`${API_URL}/decks`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
