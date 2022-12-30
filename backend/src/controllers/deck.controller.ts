@@ -4,6 +4,7 @@ import DeckService from "../services/deck.service";
 import { Request, Response, NextFunction } from "express";
 
 const noDataErrorMessage = "No data in request";
+const deckNotFoundErrorMessage = "Deck not found";
 
 export const getDecks = async (req: Request, res: Response, next: NextFunction) => {
   const deckService = new DeckService();
@@ -34,6 +35,29 @@ export const createDeck = async (req: Request, res: Response, next: NextFunction
     })
     .catch((err) => {
       logger.error(`Decks post error: ${err.message}`);
+      return next(new createError.InternalServerError(err.message));
+    });
+};
+export const deleteDeck = async (req: Request, res: Response, next: NextFunction) => {
+  // Check request params
+  if (req.params === undefined || req.params._id === undefined) {
+    logger.error(`Decks delete error: ${noDataErrorMessage}`);
+    return next(new createError.BadRequest(noDataErrorMessage));
+  }
+
+  const deckService = new DeckService();
+  return deckService
+    .deleteDeck(req.params._id)
+    .then((deletedDeck) => {
+      if (deletedDeck === null) {
+        logger.debug(`Deck not found: ${req.body._id}}`);
+        return next(new createError.NotFound(deckNotFoundErrorMessage));
+      }
+      logger.debug(`Deck deleted: ${req.body._id}}`);
+      return res.status(204).json({});
+    })
+    .catch((err) => {
+      logger.error(`Deck delete error: ${err.message}`);
       return next(new createError.InternalServerError(err.message));
     });
 };
