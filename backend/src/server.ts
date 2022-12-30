@@ -3,6 +3,7 @@ dotenvConfig();
 
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 import Deck from "./models/Deck";
 
@@ -11,8 +12,11 @@ const noDataErrorMessage = "No data in request";
 
 const app = express();
 
-// Body parser middleware
+// middlewares
+// Body parser
 app.use(express.json());
+// cors
+app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Root route!");
