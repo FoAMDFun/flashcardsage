@@ -1,3 +1,6 @@
+import { config as dotenvConfig } from "dotenv";
+dotenvConfig();
+
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -37,10 +40,18 @@ app.post("/decks", async (req: Request, res: Response) => {
 
 mongoose.set("strictQuery", false);
 
+const mongoURL = process.env.MONGO_URL || "";
+if (mongoURL.length === 0) {
+  console.log("No MongoDB URL provided, exiting...");
+  process.exit(1);
+}
+
+const displayMongoURL = mongoURL.replace(/:[^@]+@/, "//user:*****@");
+
 mongoose
-  .connect("mongodb+srv://FoAMDFun:tiCysHfIik7WDstg@cluster0.yg6lcbo.mongodb.net/flashcards")
+  .connect(mongoURL)
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log(`Connected to MongoDB at URL: ${displayMongoURL}`);
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
